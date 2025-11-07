@@ -1,31 +1,31 @@
 # Server-Driven UI: Frontend
 
-Frontend ini dibangun menggunakan **Next.js 15** dengan TailwindCSS sebagai framework styling. UI pada aplikasi ini **sepenuhnya dikendalikan dari server**, di mana frontend hanya mengambil JSON dari backend dan merender UI sesuai dengan data yang diberikan.
+This frontend is built using **Next.js 15** with TailwindCSS as the styling framework. The UI in this application is **completely controlled by the server**, where the frontend only fetches JSON from the backend and renders the UI according to the provided data.
 
-## 🎯 Tujuan
-- Memisahkan logika UI dari frontend agar dapat diperbarui tanpa perlu deployment ulang.
-- Memungkinkan perubahan UI secara **dinamis** hanya dengan mengubah response API dari backend.
-- Menyediakan pengalaman pengguna yang fleksibel dan terintegrasi dengan **autentikasi berbasis token**.
+## 🎯 Objectives
+- Separate UI logic from the frontend so it can be updated without requiring redeployment.
+- Enable **dynamic** UI changes by simply modifying the API response from the backend.
+- Provide a flexible user experience integrated with **token-based authentication**.
 
-## 🛠️ Teknologi yang Digunakan
-- **Next.js 15** - Framework React untuk aplikasi full-stack.
-- **TailwindCSS** - Styling berbasis utility untuk desain yang cepat dan konsisten.
-- **Axios / fetch** - Untuk mengambil data UI dari backend.
-- **LocalStorage** - Menyimpan token autentikasi untuk sesi pengguna.
+## 🛠️ Technologies Used
+- **Next.js 15** - React framework for full-stack applications.
+- **TailwindCSS** - Utility-based styling for fast and consistent design.
+- **Axios / fetch** - For fetching UI data from the backend.
+- **LocalStorage** - Store authentication tokens for user sessions.
 
-## 📌 Alur Kerja Frontend
-1. **Fetch UI dari backend**
-   Saat halaman dimuat, frontend akan memanggil endpoint `/ui/:page` di backend untuk mendapatkan struktur UI dalam format JSON.
+## 📌 Frontend Workflow
+1. **Fetch UI from backend**
+   When the page loads, the frontend will call the `/ui/:page` endpoint on the backend to get the UI structure in JSON format.
 
-2. **Render UI sesuai JSON**
-   JSON yang diterima akan digunakan untuk merender komponen seperti input, button, dan link secara **dinamis**.
+2. **Render UI based on JSON**
+   The received JSON will be used to render components like input, button, and link **dynamically**.
 
-3. **Interaksi dengan API**
-   Semua tombol dan input yang dikonfigurasi dalam JSON akan melakukan request ke backend sesuai dengan endpoint yang telah ditentukan dalam JSON.
+3. **Interact with API**
+   All buttons and inputs configured in the JSON will make requests to the backend according to the endpoints specified in the JSON.
 
-4. **Autentikasi & Routing**
-   - Token login disimpan di `localStorage` setelah berhasil login.
-   - Jika pengguna tidak memiliki token, mereka akan diarahkan kembali ke halaman login (`/auth`).
+4. **Authentication & Routing**
+   - Login token is stored in `localStorage` after successful login.
+   - If users don't have a token, they will be redirected back to the login page (`/auth`).
 
 ---
 
@@ -35,32 +35,32 @@ Frontend ini dibangun menggunakan **Next.js 15** dengan TailwindCSS sebagai fram
 ```
 frontend/
 
-├── app/  --> folder aplikasi
-│   ├── auth --> folder autentikasi untuk login
-│   │   ├── page.tsx  --> halaman untuk login
-│   ├── dashboard/  --> folder halaman dashboard
-│   │   ├── page.tsx --> halaman dashboard ketika berhasil login
-│   ├── register/ --> folder halaman register
-│   │   ├── page.tsx --> halaman register
-│   ├── favicon.ico --> icon aplikasi
-│   ├── globals.css --> css global styling aplikasi
-│   ├── layout.tsx  --> layout aplikasi
-│   ├── page.tsx  --> page utama aplikasi
-├── components/  --> folder komponents aplikasi
-│   ├── ui/  --> folder ui aplikasi
-│   │  ├── button.tsx --> komponent tombol usable
-│   │  ├── card.tsx  --> komponent card usable
-│   │  ├── input.tsx  --> komponent input usable
-│   │  ├── label.tsx  --> komponent label usable
-├── lib/ folder lib aplikasi
-│   ├── utils.ts --> file utils untuk merge tailwind
-├── utils/ --> folder utils aplikasi
-│   ├── fetchUI.ts file fetchUI usable
-├── package.json file list package module untuk membangun dan instalasi aplikasi
+├── app/  --> application folder
+│   ├── auth --> authentication folder for login
+│   │   ├── page.tsx  --> login page
+│   ├── dashboard/  --> dashboard page folder
+│   │   ├── page.tsx --> dashboard page after successful login
+│   ├── register/ --> register page folder
+│   │   ├── page.tsx --> register page
+│   ├── favicon.ico --> application icon
+│   ├── globals.css --> global CSS styling for the application
+│   ├── layout.tsx  --> application layout
+│   ├── page.tsx  --> main application page
+├── components/  --> application components folder
+│   ├── ui/  --> UI application folder
+│   │  ├── button.tsx --> reusable button component
+│   │  ├── card.tsx  --> reusable card component
+│   │  ├── input.tsx  --> reusable input component
+│   │  ├── label.tsx  --> reusable label component
+├── lib/ --> application lib folder
+│   ├── utils.ts --> utils file for tailwind merge
+├── utils/ --> application utils folder
+│   ├── fetchUI.ts --> reusable fetchUI file
+├── package.json --> package module list file for building and installing the application
 ```
 ---
 
-## 🧭 Arsitektur Frontend
+## 🧭 Frontend Architecture
 
 ```
 [User]
@@ -85,25 +85,25 @@ Dashboard flow:
                                  [Supabase DB]
 ```
 
-📌 **Endpoint yang diakses dari Frontend ke Backend:**
+📌 **Endpoints accessed from Frontend to Backend:**
 
-- `GET /ui/home` → Menampilkan halaman utama
-- `GET /ui/auth` → Menampilkan struktur form login
-- `GET /ui/register` → Menampilkan struktur form register
-- `POST /auth/login` → Proses login user
-- `POST /auth/register` → Proses pendaftaran user baru
-- `GET /auth/profile` → Mendapatkan data profil user yang sedang login
+- `GET /ui/home` → Display main page
+- `GET /ui/auth` → Display login form structure
+- `GET /ui/register` → Display register form structure
+- `POST /auth/login` → Process user login
+- `POST /auth/register` → Process new user registration
+- `GET /auth/profile` → Get profile data of currently logged in user
 
-Penjelasan:
-- Frontend hanya bertugas menampilkan UI yang sudah disiapkan backend dalam bentuk JSON.
-- Komponen dibentuk secara dinamis berdasarkan struktur dari endpoint `/ui/:endpoint`.
-- Semua interaksi (login, register, profile) mengarah ke backend.
-- Arsitektur ini membuat frontend ringan dan fleksibel, karena backend bertanggung jawab atas logika dan desain UI.
+Explanation:
+- The frontend is only responsible for displaying the UI that has been prepared by the backend in JSON format.
+- Components are dynamically created based on the structure from the `/ui/:endpoint` endpoint.
+- All interactions (login, register, profile) point to the backend.
+- This architecture makes the frontend lightweight and flexible, as the backend is responsible for UI logic and design.
 
 
 ---
 
-## 🚀 Cara Menjalankan
+## 🚀 How to Run
 
 ### 2️⃣ Frontend (Next.js)
 #### Install dependencies:
@@ -112,17 +112,17 @@ cd frontend
 npm install
 ```
 
-#### Jalankan server frontend:
+#### Run the frontend server:
 ```sh
 npm run dev
 ```
 
-Akses aplikasi di **http://localhost:3000**
+Access the application at **http://localhost:3000**
 
 ---
 
-## 🎨 Server-Driven UI : Contoh Response
-contoh response endpoint /ui/home dari Backend mengirimkan JSON seperti berikut:
+## 🎨 Server-Driven UI: Example Response
+Example response from the `/ui/home` endpoint - Backend sends JSON like this:
 ```json
 {
   "title": "Authentication",
@@ -142,17 +142,17 @@ contoh response endpoint /ui/home dari Backend mengirimkan JSON seperti berikut:
 }
 ```
 
-Frontend akan merender UI berdasarkan data ini secara dinamis.
+The frontend will render the UI based on this data dynamically.
 
 ---
 
-## 📢 Catatan
-- Gunakan **Node.js 18+** untuk memastikan kompatibilitas.
-- Pastikan **backend dan frontend** berjalan di server yang benar.
+## 📢 Notes
+- Use **Node.js 18+** to ensure compatibility.
+- Make sure **backend and frontend** are running on the correct servers.
 
-- Pastikan frontend mengambil data dengan **fetchUI()** agar sesuai dengan JSON dari backend.
+- Ensure the frontend fetches data with **fetchUI()** to match the JSON from the backend.
 
 ---
 
-## 📜 Lisensi
+## 📜 License
 This project is licensed under the MIT License.
